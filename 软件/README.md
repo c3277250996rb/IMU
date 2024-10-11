@@ -9,7 +9,7 @@
 上位机BUG:
 
 1. 打开软件后无响应
-   - 解决: 执行脚本 
+   - 解决: 执行脚本 [vofa脚本_无响应.cmd](https://github.com/c3277250996rb/IMU/blob/main/软件/vofa脚本_无响应.cmd)
 
 
 
