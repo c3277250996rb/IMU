@@ -35,7 +35,12 @@ extern void invmsMPU9250Init(void);
 extern void invmsMPU9250GyroRead(int16_t* ps16X, int16_t* ps16Y, int16_t* ps16Z);
 extern void invmsMPU9250AccelRead(int16_t* ps16X, int16_t* ps16Y, int16_t* ps16Z);
 extern void invmsMPU9250MagRead(int16_t* ps16X, int16_t* ps16Y, int16_t* ps16Z);
+int16_t convert(int16_t t);
 
+
+int16_t convert(int16_t t){
+    return t > 0 ? t - 65536 : t + 65535;
+}
 
 extern bool invmsMPU9255Check(void)
 {
@@ -82,15 +87,19 @@ extern void invmsMPU9250GyroRead(int16_t* ps16X, int16_t* ps16Y, int16_t* ps16Z)
 
     BUF[0]=I2C_ReadOneByte(GYRO_ADDRESS,GYRO_XOUT_L); 
     BUF[1]=I2C_ReadOneByte(GYRO_ADDRESS,GYRO_XOUT_H);
-    InBuffer[0]=	(BUF[1]<<8)|BUF[0];
+    // InBuffer[0]=	(BUF[1]<<8)|BUF[0];
+    InBuffer[1]=	-(BUF[1]<<8)|BUF[0];
 
     BUF[2]=I2C_ReadOneByte(GYRO_ADDRESS,GYRO_YOUT_L);
     BUF[3]=I2C_ReadOneByte(GYRO_ADDRESS,GYRO_YOUT_H);
-    InBuffer[1] = (BUF[3]<<8)|BUF[2];
+    // InBuffer[1] = (BUF[3]<<8)|BUF[2];
+    InBuffer[0] = -(BUF[3]<<8)|BUF[2];
 
     BUF[4]=I2C_ReadOneByte(GYRO_ADDRESS,GYRO_ZOUT_L);
     BUF[5]=I2C_ReadOneByte(GYRO_ADDRESS,GYRO_ZOUT_H);
-    InBuffer[2] = (BUF[5]<<8)|BUF[4];	
+    // InBuffer[2] = ((BUF[5]<<8)|BUF[4]);	
+    InBuffer[2] = -((BUF[5]<<8)|BUF[4]);
+    
 
     for(i = 0; i < 3; i ++)	
     {
@@ -123,11 +132,14 @@ extern void invmsMPU9250AccelRead(int16_t* ps16X, int16_t* ps16Y, int16_t* ps16Z
 
     BUF[2]=I2C_ReadOneByte(ACCEL_ADDRESS,ACCEL_YOUT_L);
     BUF[3]=I2C_ReadOneByte(ACCEL_ADDRESS,ACCEL_YOUT_H);
-    InBuffer[1]=	(BUF[3]<<8)|BUF[2];
+    // InBuffer[1]=	(BUF[3]<<8)|BUF[2];
+    InBuffer[1]=	-((BUF[3]<<8)|BUF[2]);
                    
     BUF[4]=I2C_ReadOneByte(ACCEL_ADDRESS,ACCEL_ZOUT_L);
     BUF[5]=I2C_ReadOneByte(ACCEL_ADDRESS,ACCEL_ZOUT_H);
     InBuffer[2]=	(BUF[5]<<8)|BUF[4];			       
+    InBuffer[2]=	-((BUF[5]<<8)|BUF[4]);
+    // InBuffer[2] = convert(InBuffer[2]);
 
     for(i = 0; i < 3; i ++)	
     {
@@ -164,11 +176,12 @@ extern void invmsMPU9250MagRead(int16_t* ps16X, int16_t* ps16Y, int16_t* ps16Z)
 
     BUF[2]=I2C_ReadOneByte(MAG_ADDRESS,MAG_YOUT_L);
     BUF[3]=I2C_ReadOneByte(MAG_ADDRESS,MAG_YOUT_H);
-    InBuffer[0] =	(BUF[3]<<8)|BUF[2];
+    // InBuffer[0] =	(BUF[3]<<8)|BUF[2];
+    InBuffer[0] = -InBuffer[0];
 
     BUF[4]=I2C_ReadOneByte(MAG_ADDRESS,MAG_ZOUT_L);
     BUF[5]=I2C_ReadOneByte(MAG_ADDRESS,MAG_ZOUT_H);
-    InBuffer[2] =	(BUF[5]<<8)|BUF[4];	
+    // InBuffer[2] =	(BUF[5]<<8)|BUF[4];	
     InBuffer[2] = -InBuffer[2];
 
     for(i = 0; i < 3; i ++)	
