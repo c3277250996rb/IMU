@@ -29,6 +29,14 @@ int main(void)
 	lsm_init();
 	Delay_ms(10);
 
+#ifndef lsm
+    a = 0.0175;
+    g = 1.0 / 32.8;
+#else
+    a = 0.061 * 1.000 / 1000.000;
+    g = 4.375 * 2.000 / 1000.000;
+#endif
+
 	while(1)
 	{	
 		if(!Flag_Check_Magn)
@@ -60,7 +68,7 @@ int main(void)
  			// printf("\r\n Pressure: %.2f     Altitude: %.2f \r\n",(float)PressureVal / 100, (float)AltitudeVal / 100);
  			// printf("\r\n Temperature: %.1f \r\n", (float)TemperatureVal / 10);
 			
-			printf("channels:%.6f,%.6f,%.6f,%d,%d,%d,%d,%d,%d\r\n", angles[2], angles[1], angles[0], accel[0], accel[1], accel[2], gyro[0], gyro[1], gyro[2]);
+			printf("channels:%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f\r\n", angles[2], angles[1], angles[0], ((float)accel[0]) * a, ((float)accel[1]) * a, ((float)accel[2]) * a, ((float)gyro[0]) * g, ((float)gyro[1]) * g, ((float)gyro[2]) * g);
 	
 			UART_UpdataFlag = 0;
 		}
@@ -140,9 +148,15 @@ void lsm_init(){
 	// MyI2C_Init();
 	switch_lq(0);
 	I2C_WriteOneByte(0xD6, 0x18, 0x38);
+
 	I2C_WriteOneByte(0xD6, 0x19, 0x38);
+
 	I2C_WriteOneByte(0xD6, 0x10, 0x60);
+	// I2C_WriteOneByte(0xD6, 0x10, 0x62);
+
 	I2C_WriteOneByte(0xD6, 0x11, 0x60);
+	// I2C_WriteOneByte(0xD6, 0x11, 0x62);
+
 	switch_lq(1);
 }
 

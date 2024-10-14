@@ -105,47 +105,59 @@ void IMU_AHRSupdate(float gx, float gy, float gz, float ax, float ay, float az, 
 	float q2q3 = q2 * q3;
 	float q3q3 = q3 * q3;          
 
+/* 归一化 */
+  /* 求模 */
 	norm = invSqrt(ax * ax + ay * ay + az * az);       
 	ax = ax * norm;
 	ay = ay * norm;
 	az = az * norm;
-
+  /* 求模 */
 	norm = invSqrt(mx * mx + my * my + mz * mz);          
 	mx = mx * norm;
 	my = my * norm;
 	mz = mz * norm;
 
-	// compute reference direction of flux
+/* 磁场水平 垂直分量计算 */
+  /* 旋转矩阵 */
 	hx = 2 * mx * (0.5f - q2q2 - q3q3) + 2 * my * (q1q2 - q0q3) + 2 * mz * (q1q3 + q0q2);
 	hy = 2 * mx * (q1q2 + q0q3) + 2 * my * (0.5f - q1q1 - q3q3) + 2 * mz * (q2q3 - q0q1);
 	hz = 2 * mx * (q1q3 - q0q2) + 2 * my * (q2q3 + q0q1) + 2 * mz * (0.5f - q1q1 - q2q2);         
+  /* 计算水平和垂直分量 */
 	bx = sqrt((hx * hx) + (hy * hy));
 	bz = hz;     
 
-	// estimated direction of gravity and flux (v and w)
+/* 将重力从物体坐标系转换到世界坐标系 */
+  /* 计算分量 */
 	vx = 2 * (q1q3 - q0q2);
 	vy = 2 * (q0q1 + q2q3);
 	vz = q0q0 - q1q1 - q2q2 + q3q3;
+
+/* 将磁力从物体坐标系转换到世界坐标系 */
+  /* 计算分量 */
 	wx = 2 * bx * (0.5 - q2q2 - q3q3) + 2 * bz * (q1q3 - q0q2);
 	wy = 2 * bx * (q1q2 - q0q3) + 2 * bz * (q0q1 + q2q3);
 	wz = 2 * bx * (q0q2 + q1q3) + 2 * bz * (0.5 - q1q1 - q2q2);  
 
-	// error is sum of cross product between reference direction of fields and direction measured by sensors
+/* 计算误差 叉积*/
+  /* 通过加速计观测值 世界磁力计 世界重力 */
 	ex = (ay * vz - az * vy) + (my * wz - mz * wy);
 	ey = (az * vx - ax * vz) + (mz * wx - mx * wz);
 	ez = (ax * vy - ay * vx) + (mx * wy - my * wx);
 
 	if(ex != 0.0f && ey != 0.0f && ez != 0.0f)
 	{
+/* 积分 累加误差 Ki*/
 		exInt = exInt + ex * Ki * halfT;
 		eyInt = eyInt + ey * Ki * halfT;	
 		ezInt = ezInt + ez * Ki * halfT;
 
+/* 消除误差 */
 		gx = gx + Kp * ex + exInt;
 		gy = gy + Kp * ey + eyInt;
 		gz = gz + Kp * ez + ezInt;
 	}
 
+/* 更新四元数 */
 	q0 = q0 + (-q1 * gx - q2 * gy - q3 * gz) * halfT;
 	q1 = q1 + (q0 * gx + q2 * gz - q3 * gy) * halfT;
 	q2 = q2 + (q0 * gy - q1 * gz + q3 * gx) * halfT;
@@ -166,7 +178,7 @@ void IMU_AHRSupdate(float gx, float gy, float gz, float ax, float ay, float az, 
   */
 void IMU_GetQuater(void)
 {
-	float MotionVal[9];
+	  float MotionVal[9];
     int16_t s16Gyro[3], s16Accel[3], s16Magn[3];
 
     invMSAccelRead(&s16Accel[0], &s16Accel[1], &s16Accel[2]);
@@ -180,19 +192,12 @@ void IMU_GetQuater(void)
     accel[0] = s16Accel[0];
     accel[1] = s16Accel[1];
     accel[2] = s16Accel[2];
-    
-    // gyro[0]  = -s16Gyro[1];
-    // gyro[1]  = -s16Gyro[0];
-    // gyro[2]  = -s16Gyro[2];
-    // accel[0] = -s16Accel[1];
-    // accel[1] = -s16Accel[0];
-    // accel[2] = -s16Accel[2];
 
     magn[0] = s16Magn[0] - gstMagOffset.s16X;
     magn[1] = s16Magn[1] - gstMagOffset.s16Y;
     magn[2] = s16Magn[2] - gstMagOffset.s16Z;
-    // magn[2] = -s16Magn[2] - gstMagOffset.s16Z;
     
+#ifndef lsm
     MotionVal[0]=gyro[0]/32.8;
     MotionVal[1]=gyro[1]/32.8;
     MotionVal[2]=gyro[2]/32.8;
@@ -202,8 +207,24 @@ void IMU_GetQuater(void)
     MotionVal[6]=magn[0];
     MotionVal[7]=magn[1];
     MotionVal[8]=magn[2];
+
  	IMU_AHRSupdate((float)MotionVal[0] * 0.0175, (float)MotionVal[1] * 0.0175, (float)MotionVal[2] * 0.0175,
    	(float)MotionVal[3], (float)MotionVal[4], (float)MotionVal[5], (float)MotionVal[6], (float)MotionVal[7], MotionVal[8]);
+#else
+    MotionVal[0]=gyro[0];
+    MotionVal[1]=gyro[1];
+    MotionVal[2]=gyro[2];
+    MotionVal[3]=accel[0];
+    MotionVal[4]=accel[1];
+    MotionVal[5]=accel[2];
+    MotionVal[6]=magn[0];
+    MotionVal[7]=magn[1];
+    MotionVal[8]=magn[2];
+
+ 	IMU_AHRSupdate((float)MotionVal[0] * g, (float)MotionVal[1] * g, (float)MotionVal[2] * g,
+   	(float)MotionVal[3] * a, (float)MotionVal[4] * a, (float)MotionVal[5] * a, (float)MotionVal[6], (float)MotionVal[7], MotionVal[8]);
+#endif
+
 }
 
 

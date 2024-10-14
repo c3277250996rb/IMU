@@ -49,6 +49,9 @@ extern IMU_ST_SENSOR_DATA gstMagOffset;
 extern void IMU_Init(void); 
 extern void IMU_GetYawPitchRoll(float *Angles) ;
 
+static float a = 1, g = 1;
+// #define lsm
+
 #endif
 
 /******************* (C) COPYRIGHT 2014 Waveshare *****END OF FILE*******************/
