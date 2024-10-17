@@ -1,15 +1,22 @@
 
 #include "System.h"
+#include <stdlib.h>
 
 int16_t TestmagnBuff[9] = {0};
-float ax_n, ay_n, az_n;
-float ax_n_plus_1, ay_n_plus_1, az_n_plus_1;
+// float ax_n, ay_n, az_n;
+// float ax_n_plus_1, ay_n_plus_1, az_n_plus_1;
 int16_t an[2][3];
 float gx, gy, gz;
+int i = 0;
+int j = 0;
+int k = 0;
 
 int timeout_count = 0, timeout_standard = 3, flag = 1;
 int16_t calc_o_error[6];
-int64_t ce[6];
+float ce[6];	// ?因为az已经达到了-16000, 所以最低得int32_t, 又因为变成int64_t后ax莫名出错, 所以只能选int32_t
+float ce_5;	// ?因为az已经达到了-16000, 所以最低得int32_t, 又因为变成int64_t后ax莫名出错, 所以只能选int32_t
+float dd[3];
+
 
 bool Flag_Check_Magn = false;
 extern uint32_t KeyValue;
@@ -21,13 +28,13 @@ void mag_init();
 void lsm();
 void lsm_init();
 void release_gravity();
+void update_data();
 void is_move();
 void calc_error();
+void demo_data();
 
 int main(void)
 {
-	int i = 0;
-	int j = 0;
 
 	System_Init(); // 系统初始化 --- 串口波特率115200 I2C初始化 传感器初始化
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO | RCC_APB2Periph_GPIOB, ENABLE);
@@ -50,24 +57,9 @@ int main(void)
 #endif
 
 	while (1)
-	{
-			IMU_GetYawPitchRoll(angles);
-
-			for (j = 0; j < 3; j++)
-			{
-				an[0][j] = an[1][j];
-			}
-
-			// an[1][0] = (float)accel[0] * 10.0 / 1000.0 * 0.061;
-			// an[1][1] = (float)accel[1] * 10.0 / 1000.0 * 0.061;
-			// an[1][2] = (float)accel[2] * 10.0 / 1000.0 * 0.061;
-			an[1][0] = accel[0];
-			an[1][1] = accel[1];
-			an[1][2] = accel[2];
-
-			gx = angles[2];
-			gy = angles[1];
-			gz = angles[0];
+	{		
+			update_data();
+			// demo_data();
 
 			// is_move();
 			calc_error();
@@ -78,8 +70,8 @@ int main(void)
 			// printf("channels:%.6f,%.6f,%.6f,%.6f,%.6f,%.6f\r\n", angles[2], angles[1], angles[0] , an[1][0] * 10.0 / 1000.0 * 0.061, an[1][1] * 10.0 / 1000.0 * 0.061, an[1][2] * 10.0 / 1000.0 * 0.061);
 			// if (flag == 1)
 			printf("channels:%.6f,%.6f,%.6f,%8d,%8d,%8d\r\n", angles[2], angles[1], angles[0], an[1][0], an[1][1], an[1][2]);
-			printf("timeout_count: %d, flag: %d\r\n\r\n", timeout_count, flag);
-			printf("channels:%8d,%8d,%8d\r\n", ce[4], ce[5], ce[6]);
+			// printf("timeout_count: %d, flag: %d\r\n\r\n", timeout_count, flag);
+			printf("channels:%f,%f,%f\r\n", ce[3], ce[4], ce_5);
 
 			UART_UpdataFlag = 0;
 
@@ -174,6 +166,27 @@ void release_gravity()
 	// float accZ = imuIn->linear_acceleration.x + sin(pitch)*9.81;
 }
 
+void update_data(){
+	IMU_GetYawPitchRoll(angles);
+
+	for (j = 0; j < 3; j++)
+	{
+		an[0][j] = an[1][j];
+	}
+
+	// an[1][0] = (float)accel[0] * 10.0 / 1000.0 * 0.061;
+	// an[1][1] = (float)accel[1] * 10.0 / 1000.0 * 0.061;
+	// an[1][2] = (float)accel[2] * 10.0 / 1000.0 * 0.061;
+	an[1][0] = accel[0];
+	an[1][1] = accel[1];
+	an[1][2] = accel[2];
+
+	gx = angles[2];
+	gy = angles[1];
+	gz = angles[0];
+
+}
+
 void is_move()
 {
 	if ((abs(an[1][0] - an[0][0]) > 100) ||
@@ -211,28 +224,51 @@ void is_move()
 
 
 void calc_error(){
-	static int k = 0;
-	if(k < 30){
+	// static 
+	if(k < 29){
 		k++;
 	}else{
 		k = 0;
 	}
-	ce[1] += (int64_t) an[1][0];
-	ce[2] += (int64_t) an[1][1];
-	ce[3] += (int64_t) an[1][2];
+	ce[0] += an[1][0];
+	ce[1] += an[1][1];
+	ce[2] += an[1][2];
 
-	if(k == 30){
+	if(k == 29){
+		ce[3] = ce[0] / 30;
 		ce[4] = ce[1] / 30;
-		ce[5] = ce[2] / 30;
-		ce[6] = ce[3] / 30;
+		ce_5 = ce[2] / 30;
 
+		ce[0] = 0;
 		ce[1] = 0;
 		ce[2] = 0;
-		ce[3] = 0;
 	}
 }
 
+float generate_random_float(float min, float max) {
+    float scale = rand() / (float) RAND_MAX; // 生成 [0.0, 1.0) 的随机数
+    return min + scale * (max - min); // 转换到 [min, max) 范围
+}
 
+void demo_data(){
+	// static int k = 0;
+	dd[0] = generate_random_float(600, 700);
+	dd[1] = generate_random_float(800, 900);
+	dd[2] = generate_random_float(-16000, -16200);
+
+	for (j = 0; j < 3; j++)
+	{
+		an[0][j] = an[1][j];
+	}
+
+	// an[1][0] = (float)accel[0] * 10.0 / 1000.0 * 0.061;
+	// an[1][1] = (float)accel[1] * 10.0 / 1000.0 * 0.061;
+	// an[1][2] = (float)accel[2] * 10.0 / 1000.0 * 0.061;
+	an[1][0] = dd[0];
+	an[1][1] = dd[1];
+	an[1][2] = dd[2];
+
+}
 
 
 
