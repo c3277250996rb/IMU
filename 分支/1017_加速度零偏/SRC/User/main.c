@@ -13,8 +13,8 @@ int k = 0;
 
 int timeout_count = 0, timeout_standard = 3, flag = 1;
 int16_t calc_o_error[6];
-float ce[6];	// ?因为az已经达到了-16000, 所以最低得int32_t, 又因为变成int64_t后ax莫名出错, 所以只能选int32_t
-float ce_5;	// ?因为az已经达到了-16000, 所以最低得int32_t, 又因为变成int64_t后ax莫名出错, 所以只能选int32_t
+int32_t ce[6];	// ?因为az已经达到了-16000, 所以最低得int32_t, 又因为变成int64_t后ax莫名出错, 所以只能选int32_t
+int32_t ce_5;	// ?因为az已经达到了-16000, 所以最低得int32_t, 又因为变成int64_t后ax莫名出错, 所以只能选int32_t
 float dd[3];
 
 
@@ -70,8 +70,8 @@ int main(void)
 			// printf("channels:%.6f,%.6f,%.6f,%.6f,%.6f,%.6f\r\n", angles[2], angles[1], angles[0] , an[1][0] * 10.0 / 1000.0 * 0.061, an[1][1] * 10.0 / 1000.0 * 0.061, an[1][2] * 10.0 / 1000.0 * 0.061);
 			// if (flag == 1)
 			printf("channels:%.6f,%.6f,%.6f,%8d,%8d,%8d\r\n", angles[2], angles[1], angles[0], an[1][0], an[1][1], an[1][2]);
-			// printf("timeout_count: %d, flag: %d\r\n\r\n", timeout_count, flag);
-			printf("channels:%f,%f,%f\r\n", ce[3], ce[4], ce_5);
+			printf("timeout_count: %d, flag: %d\r\n\r\n", timeout_count, flag);
+			printf("channels:%d,%d,%d\r\n", ce[3], ce[4], ce_5);
 
 			UART_UpdataFlag = 0;
 
