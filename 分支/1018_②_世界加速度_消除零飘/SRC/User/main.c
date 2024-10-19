@@ -360,17 +360,6 @@ void rotate_acceleration(double ax, double ay, double az, double in_roll, double
 }
 
 
-void calc_sum_accel(){
-	sa[0] += (wa[0] + wa[3] - 2 * ce[3]) / 2;
-	sa[1] += (wa[1] + wa[4] - 2 * ce[4]) / 2;
-	sa[2] += (wa[2] + wa[5] - 2 * ce[5]) / 2;
-}
-
-void calc_sum_distance(){
-	sd[0] = sa[0] * 0.061 / 1000.0 * 10
-}
-
-
 
 
 
