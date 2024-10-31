@@ -149,3 +149,9 @@ Citations:
 [8] http://www.360doc.com/content/22/1002/13/40892371_1050221664.shtml
 [9] https://www.ncnynl.com/archives/201904/2956.html
 [10] https://nlpr.ia.ac.cn/2007papers/gnkw/nk31.pdf
+
+
+
+![image-20241031102850164](./assets/image-20241031102850164.png)
+
+![image-20241031102923608](./assets/image-20241031102923608.png)
