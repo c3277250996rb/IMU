@@ -107,30 +107,71 @@ for t=2:N
 
 % 3 计算预测均值和协方差
 
-    %（3）计算加权均值
-        Xpred=zeros(L,1);
-        for k=1:2*L+1
-            Xpred=Xpred+Wm(k)*Xsigmapre(:,k);%均值
-        end
-    %（4）计算加权方差
-        Ppred=zeros(L,L);
-        for k=1:2*L+1
-            Ppred=Ppred+Wc(k)*(Xsigmapre(:,k)-Xpred)*(Xsigmapre(:,k)-Xpred)';%协方差矩阵
-        end
-        Ppred=Ppred+Q;
+    % 3.1 计算加权均值
+        % Xpred 初始化为一个全零的列向量，大小为 L×1，其中 L 是状态的维度。
+            Xpred=zeros(L,1);
+
+            for k=1:2*L+1
+
+        % 在每次迭代中，乘以权重后累加到 Xpred 中。最后，Xpred 就是所有 sigma 点的加权平均值，即预测均值。
+                Xpred = Xpred +                         ...
+...     % Wm(k) 是对应于第 k 个 sigma 点的权重，用于计算均值。
+                        Wm(k)                           ...
+...     % Xsigmapre(:,k) 是第 k 个 sigma 点的状态向量。
+                      * Xsigmapre(:,k);
+
+            end
+
+    % 3.2 计算加权方差
+        % Ppred 初始化为 L×L 的全零矩阵，用于存储协方差矩阵。
+            Ppred = zeros(L,L);
+
+            for k = 1:2*L+1
+
+                Ppred = Ppred +                         ...
+...     % Wc(k) 是第 k 个 sigma 点的协方差权重。
+                        Wc(k)                           ...
+...     % Xsigmapre(:,k) - Xpred 计算的是第 k 个 sigma 点与预测均值之间的差。
+                      * (Xsigmapre(:,k) - Xpred)        ...
+...     % (Xsigmapre(:,k)-Xpred)' 是这个差的转置，形成一个 L×1 的列向量和一个 1×L 的行向量的乘积，得到一个 L×L 的矩阵。
+                      * (Xsigmapre(:,k) - Xpred)';
+
+            end
+
+    % 3.3 将过程噪声协方差矩阵 Q 加入到预测协方差中，以考虑系统的不确定性。
+        Ppred = Ppred + Q;
+    
     
 % 4 使用UT变换生成新的Sigma点集
     %（5）根据预测值，再一次使用UT变换，得到新的sigma点集
-        chor=(chol((L+ramda)*Ppred))';
+
+    % 4.1 计算 Cholesky 分解：chor=(chol((L+ramda)*Ppred))';
+        % 计算缩放因子
+            scale_factor = (L + ramda) * Ppred;
+        % 进行 Cholesky 分解，得到下三角矩阵
+            lower_triangular = chol(scale_factor);
+        % 转置下三角矩阵
+            chor = lower_triangular';
+
+    % 4.2 生成 sigma 点：
         for k=1:L
+
+        % 为第 k 个 sigma 点添加正向扰动，即在预测均值 Xpred 的基础上加上 Cholesky 矩阵的第 k 列。
             XaugsigmaP1(:,k)=Xpred+chor(:,k);
+        % 为第 k 个 sigma 点添加负向扰动，即在预测均值 Xpred 的基础上减去 Cholesky 矩阵的第 k 列。
             XaugsigmaP2(:,k)=Xpred-chor(:,k);
+
         end
-        Xaugsigma=[Xpred XaugsigmaP1 XaugsigmaP2];
+
+    % 4.3 组合 sigma 点：
+        % 将预测均值 Xpred 与生成的正向和负向 sigma 点组合成一个新的 sigma 点集 Xaugsigma。这个新的 sigma 点集包含了一个中心点和 2L 个扰动点，总共 2L+1 个 sigma 点。
+            Xaugsigma=[Xpred XaugsigmaP1 XaugsigmaP2];
     
 % 5 将Sigma点代入观测函数h(x,t)计算预测观测值
     %（6）观测预测
+
         for k=1:2*L+1
+    % Zsigmapre(1,k) 将计算得到的观测值存储在 Zsigmapre 的第一行和第 k 列中。这样，Zsigmapre 就会存储所有 sigma 点对应的观测预测值。
             Zsigmapre(1,k)=hfun(Xaugsigma(:,k),k);
         end
     
@@ -140,33 +181,70 @@ for t=2:N
     % 6.1 计算观测预测加权均值
         Zpred=0;
         for k=1:2*L+1
-            Zpred=Zpred+Wm(k)*Zsigmapre(:,k);
+        % 对每个 sigma 点，通过权重 Wm(k) 加权观测预测值 Zsigmapre(:,k)，并累加到 Zpred。
+        % 这一步的结果是 Zpred 变成了所有 sigma 点观测值的加权均值，即预测的观测值。
+            Zpred = Zpred + Wm(k) * Zsigmapre(:,k);
         end
     % 6.2 计算观测加权方差
         Pzz=0;
         for k=1:2*L+1
-            Pzz=Pzz+Wc(k)*(Zsigmapre(:,k)-Zpred)*(Zsigmapre(:,k)-Zpred)';
+
+            % Pzz = Pzz + Wc(k) * (Zsigmapre(:,k) - Zpred) * (Zsigmapre(:,k) - Zpred)';
+            % 计算观测值与均值的差
+                diff = Zsigmapre(:,k) - Zpred;                
+            % 计算外积
+                outer_product = diff * diff';           
+            % 加权外积
+                weighted_contribution = Wc(k) * outer_product; 
+            % 累加到方差矩阵
+                Pzz = Pzz + weighted_contribution;            
+
         end
+        % 加上观测噪声协方差矩阵 R，得到最终的观测预测方差。
         Pzz=Pzz+R;
     
-    %（9）计算预测协方差
-        Pxz=zeros(L,1);
-        for k=1:2*L+1
-            Pxz=Pxz+Wc(k)*(Xaugsigma(:,k)-Xpred)*(Zsigmapre(:,k)-Zpred)';
+    % 6.3 计算状态与观测之间的协方差
+        %（9）计算预测协方差
+        % Pxz = Pxz + Wc(k) * (Xaugsigma(:,k) - Xpred) * (Zsigmapre(:,k) - Zpred)';
+            
+        Pxz = zeros(L, 1);
+        for k = 1:2*L + 1  
+        % 计算状态差
+            state_diff = Xaugsigma(:, k) - Xpred;      
+        % 计算观测差
+            obs_diff = Zsigmapre(:, k) - Zpred;         
+        % 计算外积
+            outer_product = state_diff * obs_diff';     
+        % 加权外积
+            weighted_contribution = Wc(k) * outer_product; 
+        % 累加到预测协方差
+            Pxz = Pxz + weighted_contribution;          
         end
-        
 
+        
 % 7 计算卡尔曼增益
     %（10）计算kalman增益
-        K=Pxz*Pzz^-1;
+    % Pxz 是状态与观测之间的协方差。
+    % Pzz^-1 是观测预测方差的逆矩阵，表示观测的不确定性。
+    % 卡尔曼增益 K 通过将状态与观测的协方差乘以观测方差的逆得到。这个增益用于确定在更新状态估计时，观测数据的影响程度。
+        K = Pxz * Pzz^-1;
         
 
 % 8 更新状态和协方差
-    %（11）状态更新
-        Xukf(:,t)=Xpred+K*(Z(t)-Zpred);
-        
-    %（12）方差更新
-        P0=Ppred-K*Pzz*K';
+    % 8.1 状态更新
+
+        % Z(t) 是在时间 t 时刻的实际观测值。
+        % Zpred 是根据当前状态预测的观测值。
+        % (Z(t) - Zpred) 计算了观测残差，即实际观测与预测观测之间的差。
+        % 将这个残差乘以卡尔曼增益 K，然后加到预测状态 Xpred 上，得到更新后的状态估计 Xukf(:, t)。
+            Xukf(:, t) = Xpred + K * (Z(t) - Zpred);
+
+    % 8.2 方差更新
+
+        % Ppred 是预测的状态协方差矩阵。
+        % K * Pzz * K' 计算了卡尔曼增益与观测方差之间的乘积。这一项表示更新后状态的不确定性。
+        % 最终将这项从预测协方差中减去，得到更新后的协方差矩阵 P0，反映了在观测更新后状态的不确定性减少。
+            P0 = Ppred - K * Pzz * K';
 
 end
 

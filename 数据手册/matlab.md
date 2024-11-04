@@ -150,3 +150,76 @@ Citations:
 [9] https://www.ncnynl.com/archives/201904/2956.html
 [10] https://nlpr.ia.ac.cn/2007papers/gnkw/nk31.pdf
 
+
+
+# 在 MATLAB 中，引号 `'` 表示矩阵的转置。具体来说，在这一行代码中：
+
+```matlab
+Ppred=Ppred+Wc(k)*(Xsigmapre(:,k)-Xpred)*(Xsigmapre(:,k)-Xpred)';
+```
+
+`(Xsigmapre(:,k) - Xpred)'` 计算的是向量 `Xsigmapre(:,k) - Xpred` 的转置，这样做的目的是为了生成一个矩阵，以便后续进行矩阵乘法。
+
+### 具体作用：
+
+1. **向量与转置**：`(Xsigmapre(:,k) - Xpred)` 是一个 \(L \times 1\) 的列向量。通过转置，这个列向量变成了一个 \(1 \times L\) 的行向量。
+
+2. **矩阵乘法**：
+   - 进行乘法时，`(Xsigmapre(:,k) - Xpred)` 与其转置的结果会形成一个 \(L \times L\) 的矩阵。
+   - 这个矩阵表示的是第 \(k\) 个 sigma 点与预测均值之间差异的协方差贡献。
+
+通过引入转置操作，最终能够计算出协方差矩阵，从而在无迹卡尔曼滤波中更新和预测状态的不确定性。
+
+
+
+# UT变换(unscented transform)是一种用于处理非线性系统的数学工具。以下是关于UT变换的主要内容:
+
+### 定义和原理
+
+UT变换是用固定数量的参数去近似一个高斯分布。它的实现原理如下:
+
+1. 在原先分布中按某一规则取一些点,使这些点的均值为协方差状态分布与原状态分布的均值和协方差相等。
+
+2. 将这些点代入非线性函数中,相应得到非线性函数值点集。
+
+3. 通过这些点集可求取变换的均值和协方差。
+
+### 与EKF的区别
+
+1. EKF是对高度复杂非线性系统模型函数进行泰勒展开,对展开式进行一阶线性截断处理。
+
+2. UKF(基于UT变换的卡尔曼滤波器)直接使用系统的非线性模型,不需对非线性系统线性化。
+
+3. UKF能获得精确到三阶矩均值和协方差,具有更高的滤波精度。
+
+### 应用
+
+UT变换主要用于:
+
+1. 在卡尔曼滤波器的非线性版本(无迹卡尔曼滤波器UKF)中估计其平均值及共变异数在非线性投影下的值。
+
+2. Riemann-Stieltjes最佳控制的计算框架。
+
+3. 水下、陆上及空中导航等领域。
+
+### 优点
+
+1. 不需要推导雅可比矩阵,计算简单。
+
+2. 可以应用于不可微分或无法线性化的函数。
+
+3. 可以捕捉到分布的三阶矩信息。
+
+总之,UT变换是一种有效的方法,用于处理非线性系统中的状态估计问题,特别是在需要准确描述分布特性的情况下。
+
+Citations:
+[1] https://www.cnblogs.com/long5683/p/14091520.html
+[2] https://www.bilibili.com/read/cv23418273/
+[3] https://zh.wikipedia.org/zh-hans/%E6%97%A0%E8%BF%B9%E5%8F%98%E6%8D%A2
+[4] https://blog.csdn.net/l2014010671/article/details/93305871
+[5] https://blog.csdn.net/qq_44154915/article/details/136909458
+[6] https://zhidao.baidu.com/question/186374114.html
+[7] http://www.aas.net.cn/fileZDHXB/journal/article/zdhxb/2014/5/PDF/2014-5-838.pdf
+[8] https://chaoli.club/index.php/10410
+[9] https://www.cnblogs.com/sbb-first-blog/p/16653826.html
+[10] https://cloud.baidu.com/article/3115595
