@@ -16,19 +16,25 @@ v = sqrt(R) * randn(1,N);
 P = eye(3);
 
 
-% s：   真实状态的存储数组，表示系统的真实状态。
+% s：真实状态的存储数组，表示系统的真实状态。
 s = zeros(1,N);
 s(1,1) = 0.1;
 
-% X：   真实状态值的存储数组，模拟系统的实际输出。
+% X：预测状态值的存储数组，模拟系统的实际输出。
+        % 定义：预测状态 X 是通过状态转移方程（即 gfun）预测出的状态估计。在 UKF 中，这个状态通过加权求平均来近似真实状态。
+        % 在你的加速度计项目中：当我们使用上一时刻的状态去预测当前的位移、速度和加速度时，得到的就是预测状态 X。例如，如果知道上一时刻的速度 v 和加速度 a，可以通过物理公式预测出下一时刻的位移和速度。
 X = zeros(1,N);
 X(1,1) = 0.1;
 
-% Z：   观测值的存储数组，包含受噪声影响的观测数据。
+% Z：观测值的存储数组，包含受噪声影响的观测数据。
+        % 定义：观测值 Z 是传感器提供的直接观测数据。在 UKF 中，观测值是通过 hfun 映射得到的，用来将状态空间映射到传感器的测量空间。
+        % 在你的加速度计项目中：加速度计测量到的加速度数据就是观测值 Z。它通常只有加速度一项，因为加速度计只能直接测量加速度。
 Z = zeros(1,N);
 Z(1) = hfun(X(1,1)) + v(1);
 
 % Xukf：UKF估计的状态，存储滤波后的状态值。
+        % 定义：估计状态 Xukf 是 UKF 通过融合预测状态和观测值后的最优估计。它是滤波器计算得出的“最佳”状态，用于接近真实状态。
+        % 在你的加速度计项目中：通过 UKF 更新后的状态估计结果，即包含估计的位移 xukf 、速度 vukf 和加速度 aukf 的向量，表示最终估计出的位移、速度和加速度。这些估计结果综合了预测信息和观测信息，是对真实状态的最佳近似。
 Xukf = zeros(1,N);
 Xukf(1,1) = X(1,1); 
 
@@ -101,7 +107,7 @@ for t=2:N
             Xsigma = [xestimate, xgamaP1, xgamaP2]; % xestimate是上一步的点，相当于均值点
     
 
-% 2 将Sigma点通过状态转移函数f(x,t)预测得到:
+% 2 将Sigma点通过状态转移函数 gfun(x,t) 预测得到:
     Xsigmapre=gfun(Xsigma,t);
     
 
@@ -146,12 +152,19 @@ for t=2:N
     %（5）根据预测值，再一次使用UT变换，得到新的sigma点集
 
     % 4.1 计算 Cholesky 分解：chor=(chol((L+ramda)*Ppred))';
-        % 计算缩放因子
-            scale_factor = (L + ramda) * Ppred;
-        % 进行 Cholesky 分解，得到下三角矩阵
-            lower_triangular = chol(scale_factor);
-        % 转置下三角矩阵
-            chor = lower_triangular';
+
+        % 在无迹变换（UT）生成新的 Sigma 点的过程中，Cholesky 分解主要用于确定 Sigma 点的分布范围。具体来说，它的作用如下：
+            % 1.生成扰动向量  ：通过 Cholesky 分解得到的矩阵 chor，用于生成扰动向量。这些扰动向量在均值 Xpred 的周围分布，确保了 Sigma 点能够代表状态分布的协方差结构。
+            % 2.保留协方差结构：chol((L+ramda)*Ppred) 的分解结果提供了一组线性变换，使得我们在 Xpred 周围分布的 Sigma 点能够反映预测协方差 Ppred 的特征。这些分布点包含了预测分布的统计特性，例如均值和协方差矩阵。
+            % 3.正负方向的扰动：通过 Cholesky 分解后的矩阵 chor，我们可以向 Xpred 加入或减去这些扰动，以形成 Sigma 点的对称分布，确保无偏性。这种对称分布是 UT 的核心，保证了对系统非线性变换后的均值和协方差的准确逼近。
+        % 综上，Cholesky 分解在这里的作用是确保生成的 Sigma 点能够准确表征状态的统计特性（尤其是协方差结构），并在均值 Xpred 的基础上加入相应的正向和负向扰动，以构建无偏的分布。
+
+            % 计算缩放因子
+                scale_factor = (L + ramda) * Ppred;
+            % 进行 Cholesky 分解，得到下三角矩阵
+                lower_triangular = chol(scale_factor);
+            % 转置下三角矩阵
+                chor = lower_triangular';
 
     % 4.2 生成 sigma 点：
         for k=1:L
@@ -167,7 +180,7 @@ for t=2:N
         % 将预测均值 Xpred 与生成的正向和负向 sigma 点组合成一个新的 sigma 点集 Xaugsigma。这个新的 sigma 点集包含了一个中心点和 2L 个扰动点，总共 2L+1 个 sigma 点。
             Xaugsigma=[Xpred XaugsigmaP1 XaugsigmaP2];
     
-% 5 将Sigma点代入观测函数h(x,t)计算预测观测值
+% 5 将Sigma点代入观测函数 hfun(x,t) 计算预测观测值
     %（6）观测预测
 
         for k=1:2*L+1
@@ -294,10 +307,16 @@ else
 end
 end
 
+
+
+% 状态转移函数, 已知当前位移和速度，通过gfun，结合加速度和时间步长，可以预测下一时刻的位移和速度。
 function res=gfun(Xekf,k)
     res=0.5.*Xekf + 25.*Xekf./(1 + Xekf.^2) + 8.*cos(0.3.*(k));
 end
 
+
+
+% hfun 从状态向量 x 中“提取”出加速度这个变量，因为这是加速度计观测到的内容。
 function res=hfun(X,k)
 res=X^2/20;
 end
