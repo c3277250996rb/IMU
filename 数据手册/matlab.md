@@ -223,3 +223,20 @@ Citations:
 [8] https://chaoli.club/index.php/10410
 [9] https://www.cnblogs.com/sbb-first-blog/p/16653826.html
 [10] https://cloud.baidu.com/article/3115595
+
+
+
+# UKF算法步骤
+
+### UKF的算法步骤如下
+
+> 1. 初始化系统状态x k , P k x_k,P_kxk,Pk
+> 2. 根据状态x k , P k x_k,P_kxk,Pk生成Sigma点X k X_kXk
+> 3. 根据预测模型预测未来的Sigma点X k + 1 ∣ k X_{k+1|k}Xk+1∣k
+> 4. 根据预测的Sigma点X k + 1 ∣ k X_{k+1|k}Xk+1∣k生成状态预测的Sigma点x k + 1 ∣ k , P k + 1 ∣ k x_{k+1|k},P_{k+1|k}xk+1∣k,Pk+1∣k
+> 5. 当测量值到来时，将预测的Sigma点X k + 1 ∣ k X_{k+1|k}Xk+1∣k转换成预测测量值Z k + 1 ∣ k Z_{k+1|k}Zk+1∣k
+> 6. 根据预测测量值Z k + 1 ∣ k Z_{k+1|k}Zk+1∣k与真实测量值z k + 1 z_{k+1}zk+1的差值更新得到系统状态x k + 1 ∣ k + 1 , P k + 1 ∣ k + 1 x_{k+1|k+1},P_{k+1|k+1}xk+1∣k+1,Pk+1∣k+1（两个高斯分布相乘得到新的系统状态x k + 1 ∣ k + 1 , P k + 1 ∣ k + 1 x_{k+1|k+1},P_{k+1|k+1}xk+1∣k+1,Pk+1∣k+1）
+
+![image-20241105094129533](./assets/image-20241105094129533.png)
+
+![image-20241105094149837](./assets/image-20241105094149837.png)
