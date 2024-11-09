@@ -50,8 +50,8 @@ for t=2:N
         P=P0;%协方差阵
         cho=(chol(P*(L+ramda)))';
         for k=1:L
-            xgamaP1(:,k)=xestimate+cho(:,k);
-            xgamaP2(:,k)=xestimate-cho(:,k);
+            xgamaP1(k)=xestimate+cho(:,k);
+            xgamaP2(k)=xestimate-cho(:,k);
         end
         Xsigma=[xestimate,xgamaP1,xgamaP2];%xestimate是上一步的点，相当于均值点
 
@@ -75,10 +75,10 @@ for t=2:N
     %第四步：根据预测值，再一次使用UT变换，得到新的sigma点集
         chor=(chol((L+ramda)*Ppred))';
         for k=1:L
-            XaugsigmaP1(:,k)=Xpred+chor(:,k);
-            XaugsigmaP2(:,k)=Xpred-chor(:,k);
+            XaugsigmaP1(k)=Xpred+chor(:,k);
+            XaugsigmaP2(k)=Xpred-chor(:,k);
         end
-        Xaugsigma=[Xpred XaugsigmaP1 XaugsigmaP2];
+        Xaugsigma=[Xpred,XaugsigmaP1,XaugsigmaP2];
 
 
     %第五步：观测预测
@@ -109,10 +109,12 @@ for t=2:N
 
 
     %第八步：状态和方差更新
-        xestimate=Xpred+K*(Z(:,t)-Zpred);
-        P=Ppred-K*Pzz*K';
-        P0=P;
-        Xukf(:,t)=xestimate;
+        % xestimate=Xpred+K*(Z(:,t)-Zpred);
+        % P=Ppred-K*Pzz*K';
+        % P0=P;
+        % Xukf(:,t)=xestimate;
+        P0=Ppred-K*Pzz*K';
+        Xukf(:,t)=Xpred+K*(Z(:,t)-Zpred);
 
 %
 end
