@@ -1,0 +1,8 @@
+function x1 = my_gfun(x0, a1, T)
+    % ×´Ì¬×ªÒÆ
+    x1(1,:) = x0(1,:);
+    x1(2,:) = x0(2,:) + (x0(1,:) + a1(:)') ./2 .*T;
+    % sx = size(a1(:)');
+    % disp(['sx size: ', num2str(sx)]);
+end
+    
