@@ -151,7 +151,7 @@ function icd(my_char)
 
     % 保存图像为PNG文件
     title(picture_name_s);
-    saveas(gcf, picture_name_s);
+    % saveas(gcf, picture_name_s);
 
 
     iwrite('share.csv', 1, 1, distance(2,N-1));

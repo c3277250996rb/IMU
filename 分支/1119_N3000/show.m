@@ -38,10 +38,10 @@ plot(t, data.x);
 title('x-a');
 
 % 保存图像为PNG文件
-saveas(gcf, 'x-a.png');
+% saveas(gcf, 'x-a.png');
 
 
-figure
+% figure
 hold on ;box on
 % t=(0:1:N);
 plot(t, data.y);
@@ -50,20 +50,24 @@ plot(t, data.y);
 title('y-a');
 
 % 保存图像为PNG文件
-saveas(gcf, 'y-a.png');
+% saveas(gcf, 'y-a.png');
 
 
-figure
+% figure
 hold on ;box on
 % t=(0:1:N);
 plot(t, data.z);
 % xlabel('Time');
 % ylabel('Value');
-title('z-a');
+% title('z-a');
 
 
 % 保存图像为PNG文件
-saveas(gcf, 'z-a.png');  % 也可以保存为 'figure.jpg'、'figure.tif' 等其他格式
+% saveas(gcf, 'z-a.png');  % 也可以保存为 'figure.jpg'、'figure.tif' 等其他格式
+
+title('accelerate (x,y,z)');
+legend('x-a','y-a','z-a');
+saveas(gcf, 'accelerate.png');  % 也可以保存为 'figure.jpg'、'figure.tif' 等其他格式
 
 
 
