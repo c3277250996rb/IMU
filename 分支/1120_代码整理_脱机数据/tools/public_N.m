@@ -1,0 +1,5 @@
+function N = public_N()
+    N = 800 - 1;
+    % N = 1200 - 1;
+    % N = 3000 - 1;
+end
