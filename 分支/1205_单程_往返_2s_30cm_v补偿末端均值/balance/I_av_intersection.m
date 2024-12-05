@@ -1,11 +1,16 @@
-function output_I_index = I_av_intersection(input_accelerate, input_velocity, input_judge_stop_times)
+function output_I_index = I_av_intersection(input_accelerate, input_velocity, input_judge_stop_times, input_is_use_uart)
 
     %阈值为0.1
     threshold = 0.1;
     cut_size = input_judge_stop_times;
     
-    % input_accelerate = input_accelerate';
-    % input_velocity = input_velocity';
+    if input_is_use_uart
+        % 使用串口
+    else
+        % 不用串口 => 转置 a
+        input_accelerate = input_accelerate';
+    end
+
     % 截取后 input_judge_stop_times 个步长的数组 compare_accelerate  compare_velocity
     cut_accelerate = input_accelerate((end-cut_size):end);
     cut_velocity = input_velocity((end-cut_size):end);

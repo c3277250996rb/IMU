@@ -142,7 +142,8 @@ while true
             input_mean  = mean_before_move;
             %
             input_judge_stop_times = judge_stop_times;
-            output_status   = ukf_balance(input_data, input_start, input_finish, input_mean, input_is_use_rotate_accel, input_judge_stop_times);
+            input_is_use_uart = is_use_uart;
+            output_status   = ukf_balance(input_data, input_start, input_finish, input_mean, input_is_use_rotate_accel, input_judge_stop_times, input_is_use_uart);
 
             flag_status_number = output_status;
             flag_status_string = flag_status_num2str(flag_status_number);

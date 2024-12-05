@@ -1,4 +1,4 @@
-function output_status = ukf_balance(input_data, input_start, input_finish, input_mean, input_is_use_rotate_accel, input_judge_stop_times)
+function output_status = ukf_balance(input_data, input_start, input_finish, input_mean, input_is_use_rotate_accel, input_judge_stop_times, input_is_use_uart)
 
     addpath('tools');
     addpath('data');
@@ -109,7 +109,7 @@ function output_status = ukf_balance(input_data, input_start, input_finish, inpu
         input_near_size = 4;
         input_accelerate = Z;
         input_velocity = Xukf(2,:);
-        output_I_index = I_av_intersection(input_accelerate, input_velocity, input_judge_stop_times);
+        output_I_index = I_av_intersection(input_accelerate, input_velocity, input_judge_stop_times, input_is_use_uart);
         disp(['output_I_index: ', num2str(output_I_index)]);
         output_velocity = velocity_compensation(output_I_index, input_tail_size, input_near_size, input_accelerate, input_velocity);
         Xukf(2,:) = output_velocity;
