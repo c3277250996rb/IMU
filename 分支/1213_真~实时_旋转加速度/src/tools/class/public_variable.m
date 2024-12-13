@@ -40,7 +40,7 @@ function output_value = public_variables(input_key)
     public_map('get_is_run_catch_exception') = 0;
 
     % get_is_test_catch_exception: test ≤∂ªÒ“Ï≥£
-    public_map('get_is_test_catch_exception') = 1;
+    public_map('get_is_test_catch_exception') = 0;
 %%%
 
 
