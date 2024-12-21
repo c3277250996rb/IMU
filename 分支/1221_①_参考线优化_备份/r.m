@@ -2,16 +2,14 @@ addpath(genpath('data'));
 addpath(genpath('main'));
 addpath(genpath('src'));
 
-% test_name = 'compare_of_rotate';
-% test_name = 'test_rotate_storage_data';
-test_name = 'test_PID4Euler';
+run_name = 'test_RT_rotate';
+% run_name = 'main_balance';
 
-if get_is_test_catch_exception()
+if get_is_run_catch_exception()
 
     while true
         try
-            run(test_name);
-            % run('main_balance');
+            run(run_name);
         catch ME
             % 捕获错误并显示错误信息
             fprintf('执行失败: %s\n', ME.message);
@@ -19,5 +17,5 @@ if get_is_test_catch_exception()
     end
 
 else
-    run(test_name);
+    run(run_name);
 end

@@ -2,8 +2,7 @@ addpath(genpath('data'));
 addpath(genpath('main'));
 addpath(genpath('src'));
 
-% test_name = 'compare_of_rotate';
-% test_name = 'test_rotate_storage_data';
+% test_name = 'test_RT_rotate';
 test_name = 'test_PID4Euler';
 
 if get_is_test_catch_exception()
