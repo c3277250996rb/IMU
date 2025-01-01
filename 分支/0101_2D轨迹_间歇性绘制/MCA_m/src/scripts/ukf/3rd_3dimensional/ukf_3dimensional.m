@@ -25,6 +25,9 @@ function output_map = ukf_3dimensional(input_data, input_start, input_finish, in
             accelerate = input_data(input_start : input_finish) - input_mean;
 
         end
+
+        accelerate = accelerate - mean(accelerate(1:40));
+
         accelerate = accelerate ./ a ./ 10;
 
         % »æÍ¼¼ÓËÙ¶È

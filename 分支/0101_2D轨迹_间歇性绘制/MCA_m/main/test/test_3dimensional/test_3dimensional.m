@@ -193,7 +193,8 @@ while true
                             plot_data = zeros(calc_length,2);
                             plot_data(:,1) = calc_data(:,4,1);
                             plot_data(:,2) = calc_data(:,4,2);
-                            plot(plot_data(1:size_time_3,1), plot_data(1:size_time_3,2), 'r'); % head
+                            % plot(plot_data(1:size_time_3,1), plot_data(1:size_time_3,2), 'r'); % head
+                            plot(plot_data(1:40,1), plot_data(1:40,2), 'r'); % head
                             plot(plot_data(size_time_3_plus_1:end-size_time_3_plus_1,1), plot_data(size_time_3_plus_1:end-size_time_3_plus_1,2), 'k'); % middle
                             plot(plot_data(end-size:end,1), plot_data(end-size:end,2), 'g'); % tail
                         %
@@ -202,7 +203,8 @@ while true
                             plot_data = zeros(calc_length,2);
                             plot_data(:,1) = calc_data(:,5,1);
                             plot_data(:,2) = calc_data(:,5,2);
-                            plot(plot_data(1:size_time_3,1), plot_data(1:size_time_3,2), 'r'); % head
+                            % plot(plot_data(1:size_time_3,1), plot_data(1:size_time_3,2), 'r'); % head
+                            plot(plot_data(1:40,1), plot_data(1:40,2), 'r'); % head
                             plot(plot_data(size_time_3_plus_1:end-size_time_3_plus_1,1), plot_data(size_time_3_plus_1:end-size_time_3_plus_1,2), 'b'); % middle
                             plot(plot_data(end-size:end,1), plot_data(end-size:end,2), 'g'); % tail
                         %
