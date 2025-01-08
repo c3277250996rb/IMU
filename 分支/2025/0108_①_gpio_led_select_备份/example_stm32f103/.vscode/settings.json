@@ -1,0 +1,5 @@
+{
+    "files.associations": {
+        "select_gpio_status.h": "c"
+    }
+}
