@@ -54,6 +54,13 @@ int main(void)
 	WitRegisterCallBack(SensorDataUpdata);
 	WitDelayMsRegister(Delayms);
 	printf("\r\n********************** wit-motion normal example  ************************\r\n");
+
+
+	WitSetOutputRate(RRATE_100HZ);
+	WitSetBandwidth(BANDWIDTH_184HZ);
+
+
+
 	AutoScanSensor();
 	while (1)
 	{
@@ -100,17 +107,20 @@ int main(void)
 			   }
 			   
 				// acc
-				printf("channel:%.3f,%.3f,%.3f,", fAcc[0], fAcc[1], fAcc[2]);
+				printf("%.6f,%.6f,%.6f,",	sReg[AX+0] * 7.8125, \
+											sReg[AX+1] * 7.8125, \
+											sReg[AX+2] * 7.8125);
 			   
 			   	// euler
-			   	printf("%.3f,%.3f,%.3f,", fAngle[0], fAngle[1], fAngle[2]);
+			   	printf("%.3f,%.3f,%.3f\r\n", fAngle[0], fAngle[1], fAngle[2]);
 
 				// gyro
-			   	printf("%.3f,%.3f,%.3f,", fGyro[0], fGyro[1], fGyro[2]);
+			   	// printf("%.3f,%.3f,%.3f,", fGyro[0], fGyro[1], fGyro[2]);
 
 				// mag
-			   	printf("%d,%d,%d\r\n", sReg[HX], sReg[HY], sReg[HZ]);
+			   	// printf("%d,%d,%d\r\n", sReg[HX], sReg[HY], sReg[HZ]);
 			   	// printf("\r\n");
+			delay_ms(25);
 	}
 }
 
@@ -173,7 +183,7 @@ static void CmdProcess(void)
 				printf("\r\nSet MagCali Error\r\n");
 			break;
 		case 'u':	
-			if(WitSetBandwidth(BANDWIDTH_5HZ) != WIT_HAL_OK) 
+			if(WitSetBandwidth(BANDWIDTH_184HZ) != WIT_HAL_OK) 
 				printf("\r\nSet Bandwidth Error\r\n");
 			break;
 		case 'U':	
@@ -197,7 +207,7 @@ static void CmdProcess(void)
 				printf("\r\nSet Rate Error\r\n");
 			break;
 		case 'r':	
-			if(WitSetOutputRate(RRATE_1HZ) != WIT_HAL_OK) 
+			if(WitSetOutputRate(RRATE_100HZ) != WIT_HAL_OK) 
 				printf("\r\nSet Rate Error\r\n");
 			break;
 		case 'C':	

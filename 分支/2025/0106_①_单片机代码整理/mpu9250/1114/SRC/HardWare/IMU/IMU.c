@@ -54,17 +54,17 @@ void IMU_Init(void)
     invMSInit();
 
     u8Ret = BMP280_Init();
-    if(u8Ret == BMP280_RET_OK)
-    {
+    // if(u8Ret == BMP280_RET_OK)
+    // {
 			  u8PressureType = IMU_PRES_TYPE_BM280;
         printf("\r\nPressure type is BM280\r\n");
-    }
-    else
-    {
-			  u8PressureType = IMU_PRES_TYPE_ER;
-        printf("\r\nNo BMP280 chip was detected\r\n");
+    // }
+    // else
+    // {
+	// 		  u8PressureType = IMU_PRES_TYPE_ER;
+    //     printf("\r\nNo BMP280 chip was detected\r\n");
 
-    }
+    // }
 	
   	q0 = 1.0f;  
   	q1 = 0.0f;

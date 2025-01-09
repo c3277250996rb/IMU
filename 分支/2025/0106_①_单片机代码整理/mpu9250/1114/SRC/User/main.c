@@ -81,7 +81,8 @@ int main(void)
 			// 	printf("%f,", PID_data[i]);
 			// }
 			// printf("%f\r\n", PID_data[8]);
-	
+		// printf("111\r\n");
+		// Delay_ms(500);
 
 
 
