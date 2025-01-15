@@ -120,7 +120,7 @@ int main(void)
 				// mag
 			   	// printf("%d,%d,%d\r\n", sReg[HX], sReg[HY], sReg[HZ]);
 			   	// printf("\r\n");
-			delay_ms(25);
+			// delay_ms(25);
 	}
 }
 
