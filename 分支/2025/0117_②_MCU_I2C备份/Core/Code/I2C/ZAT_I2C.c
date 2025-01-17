@@ -1,4 +1,4 @@
-#include "ZAT_I2C.h"
+#include "zat_i2c.h"
 
 #if !Definition
 
@@ -69,6 +69,21 @@
 
 	#endif
 
+	void Delay_us(uint16_t Time){
+		uint8_t i;	
+		while(Time --){
+			for(i = 0; i < 10; i ++){
+				// just wait
+			};
+		}
+	}
+
+	void Delay_ms(uint16_t Time){
+		while(Time --){
+			Delay_us(1000);
+		}
+	}
+
 #endif
 
 
@@ -127,7 +142,7 @@
 	#define __ZAT__Driver__Reference__
 	/* Driver Reference Begin */
 
-		void I2C_Driver_Start(I2C_Class_Struct	input_I2C_Class){
+		void I2C_Driver_Start(I2C_Class_Struct input_I2C_Class){
 			I2C_GPIO_SDA_Mode_OUT(input_I2C_Class);
 			I2C_GPIO_SDA_Write_1(input_I2C_Class);
 			Delay_us(1);
