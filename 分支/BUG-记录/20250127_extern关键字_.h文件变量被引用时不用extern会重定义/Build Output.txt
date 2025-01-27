@@ -1,0 +1,25 @@
+*** Using Compiler 'V5.06 update 3 (build 300)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
+Build target 'example_stm32f103'
+compiling main.c...
+compiling code.c...
+compiling my_usart.c...
+compiling my_led.c...
+linking...
+example_stm32f103\example_stm32f103.axf: Error: L6200E: Symbol LED_Class_BLUE multiply defined (by code.o and main.o).
+example_stm32f103\example_stm32f103.axf: Error: L6200E: Symbol LED_Class_BLUE multiply defined (by my_usart.o and main.o).
+example_stm32f103\example_stm32f103.axf: Error: L6200E: Symbol LED_Class_BLUE multiply defined (by my_led.o and main.o).
+example_stm32f103\example_stm32f103.axf: Error: L6200E: Symbol LED_Class_GREEN multiply defined (by code.o and main.o).
+example_stm32f103\example_stm32f103.axf: Error: L6200E: Symbol LED_Class_GREEN multiply defined (by my_usart.o and main.o).
+example_stm32f103\example_stm32f103.axf: Error: L6200E: Symbol LED_Class_GREEN multiply defined (by my_led.o and main.o).
+example_stm32f103\example_stm32f103.axf: Error: L6200E: Symbol LED_Class_RED multiply defined (by code.o and main.o).
+example_stm32f103\example_stm32f103.axf: Error: L6200E: Symbol LED_Class_RED multiply defined (by my_usart.o and main.o).
+example_stm32f103\example_stm32f103.axf: Error: L6200E: Symbol LED_Class_RED multiply defined (by my_led.o and main.o).
+example_stm32f103\example_stm32f103.axf: Error: L6200E: Symbol LED_Class_YELLOW multiply defined (by code.o and main.o).
+example_stm32f103\example_stm32f103.axf: Error: L6200E: Symbol LED_Class_YELLOW multiply defined (by my_usart.o and main.o).
+example_stm32f103\example_stm32f103.axf: Error: L6200E: Symbol LED_Class_YELLOW multiply defined (by my_led.o and main.o).
+Not enough information to list image symbols.
+Not enough information to list the image map.
+Finished: 2 information, 0 warning and 12 error messages.
+"example_stm32f103\example_stm32f103.axf" - 12 Error(s), 0 Warning(s).
+Target not created.
+Build Time Elapsed:  00:00:02
