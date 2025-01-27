@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拖动文件并删除</title>
+    <style>
+        #drop-zone {
+            width: 100%;
+            height: 200px;
+            border: 2px dashed #ccc;
+            text-align: center;
+            line-height: 200px;
+            color: #888;
+            margin-bottom: 20px;
+        }
+        .file-content {
+            margin-bottom: 20px;
+        }
+        #buttons-container {
+            margin-bottom: 20px;
+        }
+        .file-btn {
+            margin: 5px;
+            padding: 5px;
+            background-color: #f1f1f1;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+        .file-btn:hover {
+            background-color: #e1e1e1;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="buttons-container">
+        <button id="copy-btn" class="file-btn">复制所有内容</button>
+    </div>
+
+    <div id="drop-zone">
+        拖动文件到此处
+    </div>
+    
+    <div id="file-contents">
+        <!-- 文件内容会在这里展示 -->
+    </div>
+
+    <script>
+        // 获取拖拽区域、文件内容区域、按钮容器和复制按钮
+        const dropZone = document.getElementById('drop-zone');
+        const fileContents = document.getElementById('file-contents');
+        const copyBtn = document.getElementById('copy-btn');
+        const buttonsContainer = document.getElementById('buttons-container');
+
+        let fileButtons = []; // 用于存储所有的删除按钮
+
+        // 阻止默认事件，防止浏览器打开文件
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const files = e.dataTransfer.files; // 获取拖入的文件列表
+
+            for (const file of files) {
+                const reader = new FileReader();
+
+                reader.onload = function (event) {
+                    // 创建一个文件内容的展示区域
+                    const fileDiv = document.createElement('div');
+                    fileDiv.classList.add('file-content');
+                    fileDiv.innerHTML = `<strong>文件名: ${file.name}</strong><pre>${event.target.result}</pre>`;
+                    
+                    // 创建删除文件按钮
+                    const deleteButton = document.createElement('button');
+                    deleteButton.classList.add('file-btn');
+                    deleteButton.textContent = `删除 ${file.name}`;
+                    deleteButton.addEventListener('dblclick', () => {
+                        // 双击删除文件
+                        // if (confirm(`确定要删除文件 ${file.name} 吗？`)) {
+                            fileContents.removeChild(fileDiv); // 删除对应的文件内容区域
+                            buttonsContainer.removeChild(deleteButton); // 删除对应的按钮
+                            fileButtons = fileButtons.filter(btn => btn !== deleteButton); // 更新按钮列表
+                        // }
+                    });
+
+                    // 将文件内容显示在页面上
+                    fileContents.appendChild(fileDiv);
+                    buttonsContainer.appendChild(deleteButton); // 添加删除按钮到顶部
+
+                    // 将删除按钮加入按钮列表
+                    fileButtons.push(deleteButton);
+                };
+
+                // 读取文件内容
+                reader.readAsText(file);
+            }
+        });
+
+        // 复制所有文件内容到剪贴板
+        copyBtn.addEventListener('click', () => {
+            let allContent = '';
+            
+            // 拼接所有文件内容
+            const fileDivs = document.querySelectorAll('.file-content');
+            fileDivs.forEach(fileDiv => {
+                allContent += fileDiv.innerText + '\n';
+            });
+
+            // 将所有内容复制到剪贴板
+            navigator.clipboard.writeText(allContent).then(() => {
+                alert('内容已复制到剪贴板!');
+            }).catch(err => {
+                alert('复制失败: ' + err);
+            });
+        });
+    </script>
+
+</body>
+</html>
