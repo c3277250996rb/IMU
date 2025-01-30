@@ -1,0 +1,22 @@
+*** Using Compiler 'V5.06 update 3 (build 300)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
+Build target '10 DOF IMU Sensor'
+compiling my_i2c.c...
+..\SRC\HardWare\I2C\my_i2c.c(244): error:  #136: struct "<unnamed>" has no field "Speed"
+          GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+..\SRC\HardWare\I2C\my_i2c.c(244): error:  #20: identifier "GPIO_SPEED_FREQ_HIGH" is undefined
+          GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+..\SRC\HardWare\I2C\my_i2c.c(245): error:  #136: struct "<unnamed>" has no field "Pin"
+          GPIO_InitStruct.Pin = temp_Pin;
+..\SRC\HardWare\I2C\my_i2c.c(248): error:  #136: struct "<unnamed>" has no field "Mode"
+              GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD; 
+..\SRC\HardWare\I2C\my_i2c.c(248): error:  #20: identifier "GPIO_MODE_OUTPUT_OD" is undefined
+              GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD; 
+..\SRC\HardWare\I2C\my_i2c.c(250): error:  #136: struct "<unnamed>" has no field "Mode"
+              GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+..\SRC\HardWare\I2C\my_i2c.c(250): error:  #20: identifier "GPIO_MODE_INPUT" is undefined
+              GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+..\SRC\HardWare\I2C\my_i2c.c: 0 warnings, 7 errors
+"..\TEMP\mpu_9axes.axf" - 7 Error(s), 0 Warning(s).
+Target not created.
+Build Time Elapsed:  00:00:00
+
