@@ -1,0 +1,11 @@
+eclipse.preferences.version=1
+encoding//user/data_filter/data_filter.c=UTF-8
+encoding//user/data_filter/kalman_filter.c=UTF-8
+encoding//user/data_filter/kalman_filter.h=UTF-8
+encoding//user/icm949/i2c_driver.c=UTF-8
+encoding//user/imu_algo/attitude.c=UTF-8
+encoding//user/imu_algo/attitude.h=UTF-8
+encoding//user/imu_algo/imu_app.c=UTF-8
+encoding//user/imu_algo/my_math.c=UTF-8
+encoding//user/shell/shell_driver.c=UTF-8
+encoding//user/shell/user_shell.c=UTF-8
