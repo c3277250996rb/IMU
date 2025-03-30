@@ -144,6 +144,18 @@
 /* Driver Reference Begin */
 
     void I2C_Driver_Start(I2C_Class_Struct input_I2C_Class){
+        /**
+         * START condition
+         * 
+         * L|A\  |L
+         *  |  \A|
+         */
+        #if OD_for_1_and_PP_for_0
+
+        #else
+        I2C_GPIO_Mode_SDA_OUT(input_I2C_Class);
+        #endif
+
         I2C_GPIO_Write_SDA_1(input_I2C_Class);
         I2C_GPIO_Write_SCL_1(input_I2C_Class);
         i2c_delay();
@@ -154,6 +166,18 @@
     }
 
     void I2C_Driver_Stop(I2C_Class_Struct input_I2C_Class){
+        /**
+         * STOP codition
+         * 
+         * L|  /A|L
+         *  |A/  | 
+         */
+        #if OD_for_1_and_PP_for_0
+
+        #else
+        I2C_GPIO_Mode_SDA_OUT(input_I2C_Class);
+        #endif
+        
         I2C_GPIO_Write_SDA_0(input_I2C_Class);
         i2c_delay();
         I2C_GPIO_Write_SCL_1(input_I2C_Class);
@@ -165,6 +189,12 @@
     bool I2C_Driver_Wait_Ack(I2C_Class_Struct input_I2C_Class){
         uint8_t Retry = 0;
 
+        #if OD_for_1_and_PP_for_0
+
+        #else
+        I2C_GPIO_Mode_SDA_IN(input_I2C_Class);
+        #endif
+        
         I2C_GPIO_Write_SDA_1(input_I2C_Class);
         i2c_delay();
         I2C_GPIO_Write_SCL_1(input_I2C_Class);
@@ -185,6 +215,12 @@
     }
 
     void I2C_Driver_Ack(I2C_Class_Struct input_I2C_Class){
+        #if OD_for_1_and_PP_for_0
+
+        #else
+        I2C_GPIO_Mode_SDA_OUT(input_I2C_Class);
+        #endif
+
         I2C_GPIO_Write_SDA_0(input_I2C_Class);
         i2c_delay();
         I2C_GPIO_Write_SCL_1(input_I2C_Class);
@@ -195,6 +231,12 @@
     }
 
     void I2C_Driver_NAck(I2C_Class_Struct input_I2C_Class){
+        #if OD_for_1_and_PP_for_0
+
+        #else
+        I2C_GPIO_Mode_SDA_OUT(input_I2C_Class);
+        #endif
+
         I2C_GPIO_Write_SDA_1(input_I2C_Class);
         i2c_delay();
         I2C_GPIO_Write_SCL_1(input_I2C_Class);
@@ -208,6 +250,12 @@
     {
         uint8_t i;
         
+        #if OD_for_1_and_PP_for_0
+
+        #else
+        I2C_GPIO_Mode_SDA_OUT(input_I2C_Class);
+        #endif
+
         for(i = 0; i < 8; i ++){
             I2C_GPIO_Write_SCL_0(input_I2C_Class);
             i2c_delay();
@@ -236,6 +284,12 @@
                                 uint8_t				Ack)
     {
         uint8_t i, output_Data = 0;
+
+        #if OD_for_1_and_PP_for_0
+
+        #else
+        I2C_GPIO_Mode_SDA_IN(input_I2C_Class);
+        #endif
 
         for(i = 0; i < 8; i++){
             output_Data <<= 1;

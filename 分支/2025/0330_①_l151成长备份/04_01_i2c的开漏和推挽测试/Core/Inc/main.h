@@ -70,6 +70,7 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN Private defines */
 #define USE_MY_ALIENTEK
+#define OD_for_1_and_PP_for_0 1
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

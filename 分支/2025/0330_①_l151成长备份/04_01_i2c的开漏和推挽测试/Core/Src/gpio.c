@@ -63,12 +63,21 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   HAL_GPIO_Init(LED_BLUE_PC13_GPIO_Port, &GPIO_InitStruct);
 
+#if OD_for_1_and_PP_for_0
   /*Configure GPIO pins : PBPin PBPin */
   GPIO_InitStruct.Pin = I2C1_SCL_PB6_Pin|I2C1_SDA_PB7_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;  // 开漏输出
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+#else
+  /*Configure GPIO pins : PBPin PBPin */
+  GPIO_InitStruct.Pin = I2C1_SCL_PB6_Pin|I2C1_SDA_PB7_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;  // 推挽输出
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+#endif
 
 }
 
