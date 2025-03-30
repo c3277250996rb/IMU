@@ -1,1 +1,0 @@
-stm32l151rct6\startup_stm32l151xc.o: startup_stm32l151xc.s
