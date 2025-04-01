@@ -1,2 +1,0 @@
-清空当前表
-TRUNCATE TABLE 表名;
