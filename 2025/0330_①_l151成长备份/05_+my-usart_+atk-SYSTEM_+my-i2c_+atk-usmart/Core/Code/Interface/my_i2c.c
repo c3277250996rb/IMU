@@ -39,7 +39,7 @@
     #endif
 
     void i2c_delay(void){
-        // delay_us(1);
+        delay_us(2);
     }
 
 #endif   
@@ -76,10 +76,10 @@
     }
 
     // uint8_t I2C_2_Read(uint8_t DeviceAddress, uint8_t RegisterAddress){
-    //     return I2C_APP_Read_Single_Byte(I2C_Class_2, DeviceAddress, RegisterAddress);
+    //     return I2C_APP_Read_Single_Byte(&I2C_Class_2, DeviceAddress, RegisterAddress);
     // }
     // void I2C_2_Write(uint8_t DeviceAddress, uint8_t RegisterAddress, uint8_t input_Data){
-    //     I2C_APP_Write_Single_Byte(I2C_Class_2, DeviceAddress, RegisterAddress, input_Data);
+    //     I2C_APP_Write_Single_Byte(&I2C_Class_2, DeviceAddress, RegisterAddress, input_Data);
     // }
 
 #endif 
@@ -90,17 +90,23 @@
 /* APP Reference Begin */
 
     void I2C_APP_Init(void){
+        #if OD_for_1_and_PP_for_0 == 0
         GPIO_InitTypeDef GPIO_InitStruct = {0};
-
-        #if OD_for_1_and_PP_for_0
-
-        #else
+        __HAL_RCC_GPIOB_CLK_ENABLE();
         /*Configure GPIO pins : PBPin PBPin */
+        #if defined(I2C1_SCL_PB6_Pin) && defined(I2C1_SDA_PB7_Pin)
         GPIO_InitStruct.Pin = I2C1_SCL_PB6_Pin|I2C1_SDA_PB7_Pin;
         GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;  // 推挽输出
         GPIO_InitStruct.Pull = GPIO_PULLUP;
         GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+            HAL_GPIO_Init(I2C1_SCL_PB6_GPIO_Port, &GPIO_InitStruct);
+        #else
+            GPIO_InitStruct.Pin = GPIO_PIN_6|GPIO_PIN_7;
+            GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;  // 推挽输出
+            GPIO_InitStruct.Pull = GPIO_PULLUP;
+            GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
         HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+        #endif
         #endif
     }
 
@@ -112,14 +118,25 @@
         I2C_Driver_Start(input_I2C_Class);
         I2C_Driver_Write(	input_I2C_Class, 
                             DeviceAddress | i2c_direction_write);
-        I2C_Driver_Wait_Ack(input_I2C_Class);
+
+        if(I2C_Driver_Wait_Ack(input_I2C_Class)){
+            I2C_Driver_Stop(input_I2C_Class);
+            // return 1;
+        }
+
         I2C_Driver_Write(	input_I2C_Class, 
                             RegisterAddress);
         I2C_Driver_Wait_Ack(input_I2C_Class);
         I2C_Driver_Write(	input_I2C_Class, 
                             input_Data);
-        I2C_Driver_Wait_Ack(input_I2C_Class);
+
+        if(I2C_Driver_Wait_Ack(input_I2C_Class)){
+            I2C_Driver_Stop(input_I2C_Class);
+            // return 1;
+        }
+
         I2C_Driver_Stop(input_I2C_Class);
+        // return 0;
     }
 
     uint8_t I2C_APP_Read_Single_Byte(	I2C_Class_Struct	*input_I2C_Class, 
@@ -154,12 +171,6 @@
 /* Driver Reference Begin */
 
     void I2C_Driver_Start(I2C_Class_Struct *input_I2C_Class){
-        /**
-         * START condition
-         * 
-         * L|A\  |L
-         *  |  \A|
-         */
         #if OD_for_1_and_PP_for_0
 
         #else
@@ -172,31 +183,24 @@
         I2C_GPIO_Write_SDA_0(input_I2C_Class);
         i2c_delay();
         I2C_GPIO_Write_SCL_0(input_I2C_Class);
-        i2c_delay();
     }
 
     void I2C_Driver_Stop(I2C_Class_Struct *input_I2C_Class){
-        /**
-         * STOP codition
-         * 
-         * L|  /A|L
-         *  |A/  | 
-         */
         #if OD_for_1_and_PP_for_0
 
         #else
         I2C_GPIO_Mode_SDA_OUT(input_I2C_Class);
         #endif
         
+        I2C_GPIO_Write_SCL_0(input_I2C_Class);
         I2C_GPIO_Write_SDA_0(input_I2C_Class);
         i2c_delay();
         I2C_GPIO_Write_SCL_1(input_I2C_Class);
-        i2c_delay();
         I2C_GPIO_Write_SDA_1(input_I2C_Class);
         i2c_delay();
     }
 
-    bool I2C_Driver_Wait_Ack(I2C_Class_Struct *input_I2C_Class){
+    uint8_t I2C_Driver_Wait_Ack(I2C_Class_Struct *input_I2C_Class){
         uint8_t Retry = 0;
 
         #if OD_for_1_and_PP_for_0
@@ -214,17 +218,18 @@
             Retry++;
             if(Retry > 250){
                 I2C_Driver_Stop(input_I2C_Class);
-                return false;
+                return 1;
             }
         }
 
         I2C_GPIO_Write_SCL_0(input_I2C_Class);
-        i2c_delay();
         
-        return true;
+        return 0;
     }
 
     void I2C_Driver_Ack(I2C_Class_Struct *input_I2C_Class){
+        I2C_GPIO_Write_SCL_0(input_I2C_Class);
+        
         #if OD_for_1_and_PP_for_0
 
         #else
@@ -236,11 +241,11 @@
         I2C_GPIO_Write_SCL_1(input_I2C_Class);
         i2c_delay();
         I2C_GPIO_Write_SCL_0(input_I2C_Class);
-        i2c_delay();
-        I2C_GPIO_Write_SDA_1(input_I2C_Class);
     }
 
     void I2C_Driver_NAck(I2C_Class_Struct *input_I2C_Class){
+        I2C_GPIO_Write_SCL_0(input_I2C_Class);
+
         #if OD_for_1_and_PP_for_0
 
         #else
@@ -248,7 +253,6 @@
         #endif
 
         I2C_GPIO_Write_SDA_1(input_I2C_Class);
-        i2c_delay();
         I2C_GPIO_Write_SCL_1(input_I2C_Class);
         i2c_delay();
         I2C_GPIO_Write_SCL_0(input_I2C_Class);
@@ -266,9 +270,8 @@
         I2C_GPIO_Mode_SDA_OUT(input_I2C_Class);
         #endif
 
+        I2C_GPIO_Write_SCL_0(input_I2C_Class);
         for(i = 0; i < 8; i ++){
-            I2C_GPIO_Write_SCL_0(input_I2C_Class);
-            i2c_delay();
 
             #if 1  // 符合直觉 (推荐)
                 if(input_Data & 0x80){
@@ -279,12 +282,13 @@
             #else  // 晦涩难读 (不推荐)
                 I2C_GPIO_Write_SDA(input_I2C_Class, (input_Data & 0x80) >> 7);
             #endif
+            input_Data <<= 1;
 
             i2c_delay();
             I2C_GPIO_Write_SCL_1(input_I2C_Class);
             i2c_delay();
             I2C_GPIO_Write_SCL_0(input_I2C_Class);
-            input_Data <<= 1;
+            i2c_delay();
         }
 
         I2C_GPIO_Write_SDA_1(input_I2C_Class);
@@ -302,16 +306,15 @@
         #endif
 
         for(i = 0; i < 8; i++){
-            output_Data <<= 1;
+            I2C_GPIO_Write_SCL_0(input_I2C_Class);
+            i2c_delay();
             I2C_GPIO_Write_SCL_1(input_I2C_Class);
             i2c_delay();
+            output_Data <<= 1;
 
             if(I2C_GPIO_Read_SDA(input_I2C_Class)){
                 output_Data++;
             }
-
-            I2C_GPIO_Write_SCL_0(input_I2C_Class);
-            i2c_delay();
         }
 
         if(enum_ACK == Ack){

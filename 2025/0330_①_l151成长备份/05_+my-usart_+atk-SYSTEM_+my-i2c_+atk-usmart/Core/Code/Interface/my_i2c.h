@@ -44,8 +44,8 @@
     uint8_t I2C_1_Read(uint8_t DeviceAddress, uint8_t RegisterAddress);
     void I2C_1_Write(uint8_t DeviceAddress, uint8_t RegisterAddress, uint8_t input_Data);
 
-    // uint8_t I2C_2_Read(uint8_t DeviceAddress, uint8_t RegisterAddress);
-    // void I2C_2_Write(uint8_t DeviceAddress, uint8_t RegisterAddress, uint8_t input_Data);
+    uint8_t I2C_2_Read(uint8_t DeviceAddress, uint8_t RegisterAddress);
+    void I2C_2_Write(uint8_t DeviceAddress, uint8_t RegisterAddress, uint8_t input_Data);
 
 #endif
 
@@ -79,7 +79,7 @@
     void I2C_Driver_Stop(I2C_Class_Struct *input_I2C_Class);
 
     // µÈ´ıACK
-    bool I2C_Driver_Wait_Ack(I2C_Class_Struct *input_I2C_Class);
+    uint8_t I2C_Driver_Wait_Ack(I2C_Class_Struct *input_I2C_Class);
 
     // ·¢ËÍACK
     void I2C_Driver_Ack(I2C_Class_Struct *input_I2C_Class);

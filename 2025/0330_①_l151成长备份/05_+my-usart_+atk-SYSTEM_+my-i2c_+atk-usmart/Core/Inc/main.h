@@ -69,10 +69,7 @@ void Error_Handler(void);
 #define I2C1_SDA_PB7_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
-#define OD_for_1_and_PP_for_0  1
 
-#define USE_ATK_SYSTEM
-#define USE_ATK_USMART
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

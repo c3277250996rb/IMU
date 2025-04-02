@@ -51,6 +51,7 @@ void MX_USART1_UART_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN USART1_Init 2 */
+  #include "__interface.h"
   #ifdef USE_ATK_SYSTEM
     #include "atk_usart.h"
     UART1_Handler = huart1;

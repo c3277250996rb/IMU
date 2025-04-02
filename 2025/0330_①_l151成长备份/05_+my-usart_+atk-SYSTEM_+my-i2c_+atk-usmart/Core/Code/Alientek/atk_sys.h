@@ -2,6 +2,7 @@
 #define __SYS_H
 
 #include "main.h"
+#include "__interface.h"
 #ifdef USE_ATK_SYSTEM
 
 // #include "stm32f1xx.h"
