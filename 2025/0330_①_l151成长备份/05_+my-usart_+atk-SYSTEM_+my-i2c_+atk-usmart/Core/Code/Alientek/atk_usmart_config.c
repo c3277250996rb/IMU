@@ -10,6 +10,7 @@
 #include "my_gpio.h"
 // #include "my_fatfs.h"
 #include "test.h"
+#include "my_usart.h"
 
 extern void led_set(u8 sta);
 extern void test_fun(void(*ledset)(u8),u8 sta);			
@@ -37,6 +38,7 @@ struct _m_usmart_nametab usmart_nametab[]=
 
 	(void*)my_test,"int my_test(void)",
 	(void*)my_gpio_self_test,"void my_gpio_self_test(void)",
+	(void*)ug,"int ug(char *idle)",  // usmart_gidle
 
 	// (void*)set_DM_row,"void set_DM_row(int input_row)",
 

@@ -150,3 +150,62 @@ void my_usart_self_test(void){
     #endif
 }
 
+
+#ifdef USE_USMART_GIDLE
+/**
+ * @brief Alientek USMART Quick Function.
+ */
+char *my_func_list[] = {
+    "minnie",
+    "yuqi",
+    "shuhua"
+};
+
+int usmart_minnie(void){
+    int result = 1;
+
+    return result;
+}
+
+int usmart_yuqi(void){
+    int result = 2;
+
+    
+    return result;
+}
+
+int usmart_shuhua(void){
+    int result = 3;
+
+    
+    return result;
+}
+
+int ug(char *idle){
+    printf("\r\nit is GIDLE!\r\n");
+    int result = 0;
+    if(*idle == *my_func_list[0]){
+        printf("it is minnie!\r\n");
+        result = usmart_minnie();
+    }
+    if(idle == my_func_list[1]){
+        printf("it is yuqi!\r\n");
+        result = usmart_yuqi();
+    }
+    if(idle == my_func_list[2]){
+        printf("it is shuhua!\r\n");
+        result = usmart_shuhua();
+    }
+    // if(idle == my_func_list[3]){
+    //     printf("it is ");
+    //     result = 
+    // }
+
+    printf("end of it\r\n");
+    return result;
+}
+#endif
+
+
+
+

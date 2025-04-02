@@ -28,9 +28,18 @@ void re_init_buffer(void);
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
 void USART1_IRQHandler(void);
 #else
-#include "atk_delay.h"
-#include "atk_usart.h"
-// #include "atk_usmart.h"
+
+    #include "atk_delay.h"
+    #include "atk_usart.h"
+
+    #ifdef USE_USMART_GIDLE
+    /**
+     * @brief Alientek USMART Quick Function.
+     */
+    extern char *my_func_list[];
+    int ug(char *idle);
+    #endif
+
 #endif
 
 void UART1_APP_Init(void);

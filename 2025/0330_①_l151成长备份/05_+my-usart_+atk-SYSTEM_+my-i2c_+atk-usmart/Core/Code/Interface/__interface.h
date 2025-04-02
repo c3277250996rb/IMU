@@ -10,6 +10,7 @@
 
     #define USE_ATK_SYSTEM
     #define USE_ATK_USMART
+    #define USE_USMART_GIDLE
 
     #define OD_for_1_and_PP_for_0  0
 
