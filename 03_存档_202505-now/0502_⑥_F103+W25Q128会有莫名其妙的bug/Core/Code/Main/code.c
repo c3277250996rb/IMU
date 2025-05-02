@@ -1,0 +1,52 @@
+/*金米妮金米妮金米妮金米妮金米妮金米妮金米妮金米妮金米妮金米妮*/
+
+#include "code.h"
+
+void CODE_MAIN(){
+    CODE_INIT();
+    CODE_SELF_TEST();
+    CODE_WHILE();
+}
+
+void CODE_INIT(){
+    UART1_APP_Init();  // init UART1
+    IMU_Init(); // init IMU
+    // SPI_APP_Init(SPI_Class_1);
+    SPI_FLASH_Init();
+    MALLOC_APP_Init();
+    // FATFS_Init(1);
+}
+
+void CODE_SELF_TEST(){
+    printf("启动成功!\r\n");
+    printf("野火-F103-迷你\r\n");
+    // FATFS_Index_Check(0);
+    while(1){
+        // delay_ms(1000);
+        // my_w25q64_self_test();
+        // FATFS_Muti_Test();
+        embed_fire_fatfs_self_test(1);
+        my_test();
+        // my_gpio_self_test();
+        // my_led_self_test();
+        // my_usart_self_test();
+        // my_mpu9250_self_test();
+        // my_qmc5883_self_test();
+        // my_lsm6ds3_self_test();
+        // quaternion_self_test();
+        // muti_printf_self_test();
+    }
+}
+ 
+void CODE_WHILE(){
+    int i1;
+
+    while(1){
+        BLUE_Toggle();
+        delay_ms(1000);
+    }
+
+}
+
+
+
