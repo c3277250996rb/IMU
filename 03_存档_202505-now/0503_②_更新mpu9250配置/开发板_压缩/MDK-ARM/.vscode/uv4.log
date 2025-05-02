@@ -1,0 +1,65 @@
+*** Using Compiler 'V5.06 update 3 (build 300)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
+Build target 'stm32f103rct6'
+compiling my_fatfs.c...
+..\Core\Code\System\fatfs\my_fatfs.h(5): error:  #101: "__FATFS_Result_Struct" has already been declared in the current scope
+  typedef struct __FATFS_Result_Struct
+..\Core\Code\System\fatfs\my_fatfs.h(8): error:  #256: invalid redeclaration of type name "FATFS_Result_Struct" (declared at line 8)
+  }FATFS_Result_Struct;
+..\Core\Code\System\fatfs\my_fatfs.h(10): error:  #147: declaration is incompatible with "FATFS_Result_Struct FATFS_Result_default" (declared at line 10)
+  extern FATFS_Result_Struct FATFS_Result_default;
+..\Core\Code\System\fatfs\my_fatfs.h(13): error:  #147: declaration is incompatible with "FATFS_Result_Struct FATFS_Read(char *)" (declared at line 13)
+  FATFS_Result_Struct FATFS_Read(char* path);
+..\Core\Code\System\fatfs\my_fatfs.h(21): error:  #147: declaration is incompatible with "FATFS_Result_Struct FATFS_Index_Check(void)" (declared at line 21)
+  FATFS_Result_Struct FATFS_Index_Check(void);
+..\Core\Code\System\fatfs\my_fatfs.c(13): error:  #147: declaration is incompatible with "FATFS_Result_Struct FATFS_Result_default" (declared at line 10 of "..\Core\Code\System\fatfs\my_fatfs.h")
+  FATFS_Result_Struct FATFS_Result_default = {
+..\Core\Code\System\fatfs\my_fatfs.c: 0 warnings, 6 errors
+compiling quaternion.c...
+..\Core\Code\System\fatfs\my_fatfs.h(5): error:  #101: "__FATFS_Result_Struct" has already been declared in the current scope
+  typedef struct __FATFS_Result_Struct
+..\Core\Code\System\fatfs\my_fatfs.h(8): error:  #256: invalid redeclaration of type name "FATFS_Result_Struct" (declared at line 8)
+  }FATFS_Result_Struct;
+..\Core\Code\System\fatfs\my_fatfs.h(10): error:  #147: declaration is incompatible with "FATFS_Result_Struct FATFS_Result_default" (declared at line 10)
+  extern FATFS_Result_Struct FATFS_Result_default;
+..\Core\Code\System\fatfs\my_fatfs.h(13): error:  #147: declaration is incompatible with "FATFS_Result_Struct FATFS_Read(char *)" (declared at line 13)
+  FATFS_Result_Struct FATFS_Read(char* path);
+..\Core\Code\System\fatfs\my_fatfs.h(21): error:  #147: declaration is incompatible with "FATFS_Result_Struct FATFS_Index_Check(void)" (declared at line 21)
+  FATFS_Result_Struct FATFS_Index_Check(void);
+..\Core\Code\Tool\quaternion.h(24): error:  #101: "enum_Stop" has already been declared in the current scope
+      enum_Stop = 0,
+..\Core\Code\Tool\quaternion.h(25): error:  #101: "enum_Ready" has already been declared in the current scope
+      enum_Ready,
+..\Core\Code\Tool\quaternion.h(26): error:  #101: "eunm_Continuous" has already been declared in the current scope
+      eunm_Continuous
+..\Core\Code\Tool\quaternion.c(63): error:  #40: expected an identifier
+      #ifdef !use_DM_Write
+..\Core\Code\Tool\quaternion.c(84): error:  #137: expression must be a modifiable lvalue
+              DM_angle_record = 0;
+..\Core\Code\Tool\quaternion.c: 0 warnings, 10 errors
+compiling data_management.c...
+..\Core\Code\Tool\data_management.c(3): error:  #77-D: this declaration has no storage class or type specifier
+  DM_Result_default = {
+..\Core\Code\Tool\data_management.c(3): error:  #147: declaration is incompatible with "DM_Result_Struct DM_Result_default" (declared at line 9 of "..\Core\Code\Tool\data_management.h")
+  DM_Result_default = {
+..\Core\Code\Tool\data_management.c(4): error:  #3626: a designator cannot be used with a non-aggregate type "int"
+      .Status = 0
+..\Core\Code\Tool\data_management.c(16): error:  #18: expected a ")"
+      while(i = 0; i < temp_row; i++){
+..\Core\Code\Tool\data_management.c(17): error:  #142: expression must have pointer-to-object type
+          snprintf(temp_DM_Write_Buffer, sizeof(temp_DM_Write_Buffer), "\r\n%d", input_Array[i][1]);
+..\Core\Code\Tool\data_management.c(18): error:  #18: expected a ")"
+          while(j = 0; j < temp_column; j++){
+..\Core\Code\Tool\data_management.c(19): error:  #142: expression must have pointer-to-object type
+              snprintf(temp_DM_Write_Buffer, sizeof(temp_DM_Write_Buffer), "%s,%f", &temp_DM_Write_Buffer, input_Array[i][j]);
+..\Core\Code\Tool\data_management.c(24): error:  #137: expression must be a modifiable lvalue
+              temp_DM_Write_Buffer = temp_DM_Write_Buffer + 2;
+..\Core\Code\Tool\data_management.c(39): error:  #142: expression must have pointer-to-object type
+      return sizeof(arr[0]) / sizeof(arr[0][0]);
+..\Core\Code\Tool\data_management.c: 0 warnings, 9 errors
+compiling test.c...
+..\Core\Code\Main\test.c(472): error:  #20: identifier "is_Q_stop" is undefined
+          is_Q_stop = enum_Ready;
+..\Core\Code\Main\test.c: 0 warnings, 1 error
+"stm32f103rct6\stm32f103rct6.axf" - 26 Error(s), 0 Warning(s).
+Target not created.
+Build Time Elapsed:  00:00:01
