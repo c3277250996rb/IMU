@@ -21,6 +21,7 @@
 #include "main.h"
 
 
+#include "main.h"
 #if defined(__STM32F1XX_H)
     // F103
     #include "stm32f1xx_hal_uart.h"

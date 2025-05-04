@@ -17,7 +17,7 @@ void CODE_INIT(void){
 
 void CODE_SELF_TEST(void){
     while(1){
-        
+        // muti_printf_self_test();
         while(1);
     }
 }

@@ -570,9 +570,14 @@
               <FilePath>..\Core\Code\Main\test.c</FilePath>
             </File>
             <File>
-              <FileName>multi_printf.c</FileName>
+              <FileName>my_array.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Core\Code\Tool\multi_printf.c</FilePath>
+              <FilePath>..\Core\Code\Tool\my_array.c</FilePath>
+            </File>
+            <File>
+              <FileName>my_string.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Code\Tool\my_string.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -18,6 +18,7 @@
 #define __SYS_H	
 #define SYSTEM_SUPPORT_OS		0		//定义系统文件夹是否支持UCOS   //0,不支持ucos   //1,支持ucos     
 
+#include "main.h"
 #if defined(__STM32F1XX_H)
     // F103
     #include "stm32f1xx.h"

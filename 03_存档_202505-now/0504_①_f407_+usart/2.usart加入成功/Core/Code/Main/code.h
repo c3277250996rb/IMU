@@ -9,8 +9,9 @@
 
 
 // template
-#if 1
+#if 0
 
+#include "main.h"
 #if defined(__STM32F1XX_H)
     // F103
 #elif defined(__STM32L1XX_H)
