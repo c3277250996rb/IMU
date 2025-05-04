@@ -32,8 +32,10 @@
 #include "sys.h"
 // #include "lcd.h"
 #include "code.h"
- 
+
+#include "my_flash.h"
 #include "my_string.h"
+
 // USMART (G)I-DLE
 #if 1
 char *my_func_list[] = {
@@ -108,10 +110,10 @@ struct _m_usmart_nametab usmart_nametab[]=
 	
 
 	/* multi printf */
-	 //(void*)muti_printf_self_test,"int muti_printf_self_test(void)",
+	(void*)muti_printf_self_test,"int muti_printf_self_test(void)",
 
 	/* flash */
-	// (void*)my_flash_self_test,"int my_flash_self_test(void)",
+	(void*)my_flash_self_test,"int my_flash_self_test(void)",
 
 	/* fat */
 	(void*)my_fatfs_self_test,"void my_fatfs_self_test(void)",
