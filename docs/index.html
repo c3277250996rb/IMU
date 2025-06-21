@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>文件列表</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        ul { list-style: none; padding-left: 0; }
+        li { margin: 5px 0; }
+        a { color: #0a5; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>当前目录文件列表</h1>
+    <ul id="file-list">加载中...</ul>
+
+    <script>
+        const files = [            "1.ps1",
+            "index.html",
+            "README.md"        ];
+        const list = document.getElementById('file-list');
+        list.innerHTML = "";
+        files.forEach(path => {
+            const li = document.createElement("li");
+            const a = document.createElement("a");
+            a.href = path;
+            a.textContent = path;
+            a.target = "_blank";
+            li.appendChild(a);
+            list.appendChild(li);
+        });
+    </script>
+</body>
+</html>
